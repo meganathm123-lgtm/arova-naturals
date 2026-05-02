@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Orders</title>
+
+<style>
+body{
+  font-family:'Segoe UI';
+  margin:0;
+  background:#f5f5f5;
+  padding:20px;
+}
+
+/* TITLE */
+h1{
+  margin-bottom:20px;
+}
+
+/* ORDER CARD */
+.order-card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* PRODUCT */
+.product{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+
+.product img{
+  width:80px;
+  border-radius:8px;
+}
+
+/* TIMELINE */
+.timeline {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:20px;
+  position:relative;
+}
+
+.timeline::before {
+  content:'';
+  position:absolute;
+  top:10px;
+  left:0;
+  width:100%;
+  height:4px;
+  background:#ccc;
+  z-index:0;
+}
+
+.step {
+  position:relative;
+  text-align:center;
+  flex:1;
+  z-index:1;
+}
+
+.circle {
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#ccc;
+  margin:auto;
+}
+
+.active .circle {
+  background:#2e7d32;
+}
+
+.step small {
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  color:#555;
+}
+
+.step span {
+  display:block;
+  font-size:11px;
+  color:#888;
+}
+
+/* TRACK BOX */
+.track{
+  margin-top:15px;
+  background:#e8f5e9;
+  padding:12px;
+  border-radius:8px;
+  color:#2e7d32;
+  font-weight:500;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Your Orders</h1>
+
+<div id="orders"></div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+let container = document.getElementById("orders");
+
+cart.forEach((item,index)=>{
+
+  let today = new Date();
+
+  let dates = [
+    new Date(today.getTime() - 3*24*60*60*1000),
+    new Date(today.getTime() - 2*24*60*60*1000),
+    new Date(today.getTime() - 1*24*60*60*1000),
+    today
+  ];
+
+  function formatDate(d){
+    return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+  }
+
+  let statusStage = Math.floor(Math.random()*4);
+
+  let steps = ["Ordered","Shipped","Out for Delivery","Delivered"];
+
+  let trackingText = [
+    "Order Placed",
+    "Shipped from Uthokkottai",
+    "Out for Delivery",
+    "Delivered Successfully"
+  ];
+
+  container.innerHTML += `
+    <div class="order-card">
+
+      <div class="product">
+        <img src="images/${item.name.toLowerCase().replace(" ","")}.png">
+        <div>
+          <h3>${item.name}</h3>
+          <p>Quantity: ${item.qty}</p>
+          <b>Total: ₹${item.price * item.qty}</b>
+        </div>
+      </div>
+
+      <div class="timeline">
+        ${steps.map((step,i)=>`
+          <div class="step ${i<=statusStage ? "active":""}">
+            <div class="circle"></div>
+            <small>${step}</small>
+            <span>${formatDate(dates[i])}</span>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="track">
+        📦 ${trackingText[statusStage]}
+      </div>
+
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>

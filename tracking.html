@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Track Order</title>
+</head>
+
+<body>
+
+<h2>Track Your Order</h2>
+
+<input type="text" placeholder="Enter Order ID">
+<button onclick="track()">Track</button>
+
+<p id="status"></p>
+
+<script>
+function track(){
+  document.getElementById("status").innerText =
+  "Order is being prepared 🚚";
+}
+</script>
+
+</body>
+</html>
